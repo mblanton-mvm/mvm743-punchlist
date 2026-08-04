@@ -188,8 +188,12 @@
   .check.picker { flex-direction: column; align-items: stretch; gap: 9px; padding-top: 11px; padding-bottom: 11px; }
   .check.picker .ctext { flex: none; }
   .pk3 { display: flex; gap: 6px; }
+    .pk3.pk4 { gap: 4px; }
+    .pk3.pk4 .pk-btn { font-size: 11.5px; padding: 0 2px; letter-spacing: -.2px; }
   .pk-btn { appearance: none; flex: 1; min-width: 0; border: 1px solid var(--line-strong); background: var(--surface-2); color: var(--ink-2); font-size: 13px; font-weight: 700; height: 42px; padding: 0 4px; border-radius: 9px; cursor: pointer; }
-  .pk-btn[data-pv="bed"][aria-pressed="true"], .pk-btn[data-pv="liv"][aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  /* Any selected TV pill takes the accent. Keyed off aria-pressed, not the position name: Cliffs
+     units use b1/b2/liv, so the old bed/liv-only rule left "Bed 1"/"Bed 2" looking unselected. */
+  .pk-btn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
   .pk-btn[data-pv="neither"][aria-pressed="true"] { background: var(--warn); border-color: var(--warn); color: #fff; }
   .picker-sub { display: none; }
   .picker-sub.show { display: block; }
@@ -461,6 +465,15 @@
     searchHint: "Find room, guest, or \u2018building A\u2019\u2026",
     relabelSub: "Every STB in this unit",
     tvColumns: [{ key: "b1", label: "Bedroom 1" }, { key: "b2", label: "Bedroom 2" }, { key: "liv", label: "Living" }],
+    pickers: [
+      { key: "ltv", label: "Live TV Worked When Entering", resetSubs: true },
+      { key: "qr", label: "Casting QR Code Displays" }
+    ],
+    // Parity with 784: "Live TV Worked When Entering" replaces the old "Live linear content works".
+    // The 51 rooms already completed answered the OLD question; their answers stay in the stored
+    // data and are captured in MVM743-completed-punchlist-rooms-2026-08-04.xlsx before this change,
+    // so nothing is lost — but they must not be read as answers to the new question.
+    noLinear: true,
     makeRooms: function () {
       var DATA = "A|1001|3;A|1002|3;A|1003|3;A|1004|3;A|2001|2;A|2002|2;A|2003|2;A|2004|2;B|1005|3;B|1006|3;B|1007|3;B|1008|3;B|2005|2;B|2006|2;B|2007|2;B|2008|2;C|1009|3;C|1010|3;C|1011|3;C|1012|3;C|2009|3;C|2010|3;C|2011|3;C|2012|3;D|1013|3;D|1014|3;D|1015|3;D|1016|3;D|2013|3;D|2014|3;D|2015|3;D|2016|3;E|1017|3;E|1018|3;E|1019|3;E|1020|3;E|2017|3;E|2018|3;E|2019|3;E|2020|3;F|1021|2;F|1022|2;F|1023|2;F|1024|2;F|2021|2;F|2022|2;F|2023|2;F|2024|2;G|1025|3;G|1026|3;G|1027|3;G|1028|3;G|2025|3;G|2026|3;G|2027|3;G|2028|3;H|1029|3;H|1030|3;H|1031|3;H|1032|3;H|2029|3;H|2030|3;H|2031|3;H|2032|3;I|1033|3;I|1034|3;I|1035|3;I|1036|3;I|2033|3;I|2034|3;I|2035|3;I|2036|3;J|1037|2;J|1038|2;J|1039|2;J|1040|2;J|2037|2;J|2038|2;J|2039|2;J|2040|2;K|1041|2;K|1042|2;K|1043|2;K|1044|2;K|2041|2;K|2042|2;K|2043|2;K|2044|2;L|1045|2;L|1046|2;L|1047|2;L|1048|2;L|2045|2;L|2046|2;L|2047|2;L|2048|2;M|1049|2;M|1050|2;M|1051|2;M|1052|2;M|2049|2;M|2050|2;M|2051|2;M|2052|2;N|1053|3;N|1054|3;N|1055|3;N|1056|3;N|2053|3;N|2054|3;N|2055|3;N|2056|3;O|1057|3;O|1058|3;O|1059|3;O|1060|3;O|2057|3;O|2058|3;O|2059|3;O|2060|3;P|1061|3;P|1062|3;P|1063|3;P|1064|3;P|2061|3;P|2062|3;P|2063|3;P|2064|3;Q|1065|3;Q|1066|3;Q|1067|3;Q|1068|3;Q|2065|3;Q|2066|3;Q|2067|3;Q|2068|3;R|1069|2;R|1070|2;R|1071|2;R|1072|2;R|2069|2;R|2070|2;R|2071|2;R|2072|2;S|1073|3;S|1074|3;S|1075|3;S|1076|3;S|2073|3;S|2074|3;S|2075|3;S|2076|3;T|1077|3;T|1078|3;T|1079|3;T|1080|3;T|2077|3;T|2078|3;T|2079|3;T|2080|3;U|1081|3;U|1082|3;U|1083|3;U|1084|3;U|2081|2;U|2082|2;U|2083|2;U|2084|2;V|1085|3;V|1086|3;V|1087|3;V|1088|3;V|2085|2;V|2086|2;V|2087|2;V|2088|2";
       return DATA.split(";").filter(Boolean).map(function (rec) {
@@ -571,8 +584,8 @@
   }
   function tvAnswered(e) { if (!e) return false; if (e.display === "welcome" || e.display === "guest") return true; if (e.display === "name") return (e.name || "").trim() !== ""; return e.match === "yes" || e.match === "no"; }
   function commentAnswered(s) { return s.commentChoice === "no" || (s.commentChoice === "yes" && (s.commentText || "").trim() !== ""); }
-  function roomDone(id) { var s = roomState(id), rm = roomDef(id); if (!(s.relabel && s.fw && s.devmac)) return false; if (!CONFIG.noLinear && !s.linear) return false; if (CONFIG.pickers) { for (var pi = 0; pi < CONFIG.pickers.length; pi++) if (!pickerAnswered(s, CONFIG.pickers[pi])) return false; } if (!commentAnswered(s)) return false; return rm.tvs.every(function (tv) { return tvAnswered(s.tv[tv.key]); }); }
-  function roomTouched(id) { var s = roomState(id), rm = roomDef(id); if (s.relabel || s.fw || s.devmac || s.linear || s.commentChoice || (s.commentText || "").trim() !== "") return true; if (CONFIG.pickers && CONFIG.pickers.some(function (p) { var pk = (s.picks || {})[p.key]; return pk && (pk.bed || pk.liv || pk.neither); })) return true; return rm.tvs.some(function (tv) { var e = s.tv[tv.key]; return e.display || e.match || (e.name || "").trim() !== ""; }); }
+  function roomDone(id) { var s = roomState(id), rm = roomDef(id); if (!(s.relabel && s.fw && s.devmac)) return false; if (!CONFIG.noLinear && !s.linear) return false; if (CONFIG.pickers) { for (var pi = 0; pi < CONFIG.pickers.length; pi++) if (!pickerAnswered(s, CONFIG.pickers[pi], rm)) return false; } if (!commentAnswered(s)) return false; return rm.tvs.every(function (tv) { return tvAnswered(s.tv[tv.key]); }); }
+  function roomTouched(id) { var s = roomState(id), rm = roomDef(id); if (s.relabel || s.fw || s.devmac || s.linear || s.commentChoice || (s.commentText || "").trim() !== "") return true; if (CONFIG.pickers && CONFIG.pickers.some(function (p) { var pk = (s.picks || {})[p.key]; return pk && pkAny(pk); })) return true; return rm.tvs.some(function (tv) { var e = s.tv[tv.key]; return e.display || e.match || (e.name || "").trim() !== ""; }); }
   function issuesOf(id) {
     var s = roomState(id), rm = roomDef(id), out = [];
     if (s.relabel === "no") out.push("relabel");
@@ -672,7 +685,8 @@
       var card = document.createElement("article");
       card.className = "card collapsed";
       card.setAttribute("data-room", id);
-      var checksHtml = qRow(id, "relabel", "Boxes labeled w/ @B or @L", "") +
+      var relLbl = "Boxes labeled w/ " + (rm.tvs.length >= 3 ? "@B1, @B2, @L" : "@B or @L");
+      var checksHtml = qRow(id, "relabel", relLbl, "") +
         qRow(id, "fw", "Firmware verified " + CONFIG.firmware, "") +
         qRow(id, "devmac", "Use Device MAC", "") +
         (CONFIG.noLinear ? "" : qRow(id, "linear", "Live linear content works", ""));
@@ -702,15 +716,69 @@
     });
   });
 
-  function pickStr(pk) { if (!pk) return ""; if (pk.neither) return "Neither"; var a = []; if (pk.bed) a.push("Bedroom"); if (pk.liv) a.push("Living Room"); return a.join(", "); }
-  function subActive(pk, cond) { if (!(pk.bed || pk.liv || pk.neither)) return false; if (cond === "notBed") return !pk.bed; if (cond === "notLiv") return !pk.liv; if (cond === "neither") return !!pk.neither; return false; }
-  function pickerAnswered(s, p) { var pk = (s.picks || {})[p.key]; if (!pk || !(pk.bed || pk.liv || pk.neither)) return false; if (p.subs) { for (var i = 0; i < p.subs.length; i++) { var sb = p.subs[i]; if (subActive(pk, sb.showWhen)) { var v = s[sb.key]; if (!(v === "yes" || v === "no")) return false; } } } return true; }
+  // Feeds the spreadsheet export, so it must emit READABLE positions, not the storage keys. Ordered
+  // by the room's own TV order rather than object key order, which follows whatever the tech tapped
+  // first. Needs the room to tell "Bedroom" (2-TV) from "Bedroom 1" (3-TV).
+  function pickStr(pk, rm) {
+    if (!pk) return "";
+    if (pk.neither) return "Neither";
+    var keys = rm ? rm.tvs.map(function (t) { return t.key; }) : ["bed", "liv"];
+    var a = [];
+    keys.forEach(function (k) { if (pk[k]) a.push(rm ? posLabel(rm, k) : k); });
+    return a.join(", ");
+  }
+  // MVM743 has BOTH 2-TV and 3-TV units, so a picker's options must come from the ROOM, not the
+  // property. The engine shipped hardcoded to bed/liv/neither (784's shape); dropping 784's config
+  // in here would render pills writing pk.bed, a key Cliffs has no TV for — completion would never
+  // satisfy and the CSV export would blank. These helpers make it room-driven.
+  function posLabel(rm, key) {
+    if (key === "liv") return "Living room";
+    if (key === "bed") return "Bedroom";
+    if (key === "b2") return "Bedroom 2";
+    if (key === "b1") return rm.tvs.some(function (t) { return t.key === "b2"; }) ? "Bedroom 1" : "Bedroom";
+    return key;
+  }
+  function pickOpts(rm) {
+    var three = rm.tvs.length >= 3;
+    var o = rm.tvs.map(function (t) {
+      return [t.key, t.key === "liv" ? "Living" : (three ? posLabel(rm, t.key).replace("Bedroom", "Bed") : posLabel(rm, t.key))];
+    });
+    o.push(["neither", "Neither"]);
+    return o;
+  }
+  function pickSubs(rm, p) {
+    if (!p.resetSubs) return [];
+    return rm.tvs.map(function (t) {
+      return { key: t.key + "Reset", label: posLabel(rm, t.key) + " box reset, verified TV works",
+               showWhen: "not:" + t.key };
+    });
+  }
+  function pkAny(pk) { for (var k in pk) { if (pk[k]) return true; } return false; }
+  function subActive(pk, cond) {
+    if (!pkAny(pk)) return false;
+    if (cond === "neither") return !!pk.neither;
+    if (cond.indexOf("not:") === 0) return !pk[cond.slice(4)];
+    if (cond === "notBed") return !pk.bed;
+    if (cond === "notLiv") return !pk.liv;
+    return false;
+  }
+  function pickerAnswered(s, p, rm) {
+    var pk = (s.picks || {})[p.key];
+    if (!pk || !pkAny(pk)) return false;
+    var subs = (p.subs || []).concat(rm ? pickSubs(rm, p) : []);
+    for (var i = 0; i < subs.length; i++) {
+      var sb = subs[i];
+      if (subActive(pk, sb.showWhen)) { var v = s[sb.key]; if (!(v === "yes" || v === "no")) return false; }
+    }
+    return true;
+  }
   function pickerRow(id, p) {
     var pk = (roomState(id).picks || {})[p.key] || {};
-    var opts = [["bed", "Bedroom"], ["liv", "Living Room"], ["neither", "Neither"]];
+    var rmP = roomDef(id);
+    var opts = pickOpts(rmP);
     var pills = opts.map(function (o) { return '<button type="button" class="pk-btn" data-pv="' + o[0] + '" aria-pressed="' + (!!pk[o[0]]) + '">' + o[1] + '</button>'; }).join("");
-    var html = '<div class="check picker" data-r="' + esc(id) + '" data-pk="' + p.key + '"><span class="ctext">' + esc(p.label) + '</span><div class="pk3">' + pills + '</div></div>';
-    (p.subs || []).forEach(function (sb) { var sv = roomState(id)[sb.key] || ""; html += '<div class="picker-sub' + (subActive(pk, sb.showWhen) ? " show" : "") + '" data-cond="' + sb.showWhen + '"><div class="check q" data-r="' + esc(id) + '" data-field="' + sb.key + '"><span class="ctext">' + esc(sb.label) + '</span>' + ynHtml(sv) + '</div></div>'; });
+    var html = '<div class="check picker" data-r="' + esc(id) + '" data-pk="' + p.key + '"><span class="ctext">' + esc(p.label) + '</span><div class="pk3' + (opts.length > 3 ? " pk4" : "") + '">' + pills + '</div></div>';
+    (p.subs || []).concat(pickSubs(rmP, p)).forEach(function (sb) { var sv = roomState(id)[sb.key] || ""; html += '<div class="picker-sub' + (subActive(pk, sb.showWhen) ? " show" : "") + '" data-cond="' + sb.showWhen + '"><div class="check q" data-r="' + esc(id) + '" data-field="' + sb.key + '"><span class="ctext">' + esc(sb.label) + '</span>' + ynHtml(sv) + '</div></div>'; });
     return html;
   }
   // ---- Events ----
@@ -1068,8 +1136,26 @@
       cols.push({ h: "Use Device MAC?", v: function (id, s) { return ynStr(s.devmac); } });
       if (!CONFIG.noLinear) cols.push({ h: "Live linear?", v: function (id, s) { return ynStr(s.linear); }, red: function (id, s) { return s.linear === "no" ? "1" : null; } });
       (CONFIG.pickers || []).forEach(function (p) {
-        cols.push({ h: p.label, v: function (id, s) { return pickStr((s.picks || {})[p.key]); } });
-        (p.subs || []).forEach(function (sb) { cols.push({ h: sb.label, v: function (id, s) { var pk = (s.picks || {})[p.key] || {}; if (!(pk.bed || pk.liv || pk.neither)) return ""; var didntWork = sb.showWhen === "notBed" ? !pk.bed : sb.showWhen === "notLiv" ? !pk.liv : !!pk.neither; return didntWork ? ynStr(s[sb.key]) : "Yes"; } }); });
+        cols.push({ h: p.label, v: function (id, s) { return pickStr((s.picks || {})[p.key], roomDef(id)); } });
+        // A picker's sub-questions are derived from the ROOM (2-TV units have no Bedroom 2), but a
+        // sheet needs one fixed column set — so take the union across every room. Labels come from
+        // the widest room so the header reads "Bedroom 1", not whichever unit happened to sort
+        // first. A room without that TV reports n/a rather than a misleading blank.
+        var seen = {}, subs = [];
+        ROOMS.map(roomDef).sort(function (a, b) { return b.tvs.length - a.tvs.length; })
+          .forEach(function (rm) {
+            pickSubs(rm, p).forEach(function (sb) { if (!seen[sb.key]) { seen[sb.key] = 1; subs.push(sb); } });
+          });
+        (p.subs || []).concat(subs).forEach(function (sb) {
+          cols.push({ h: sb.label, v: function (id, s) {
+            var rm = roomDef(id), pk = (s.picks || {})[p.key] || {};
+            var applies = (sb.showWhen || "").indexOf("not:") !== 0 ||
+              rm.tvs.some(function (t) { return t.key === sb.showWhen.slice(4); });
+            if (!applies) return "n/a";
+            if (!pkAny(pk)) return "";
+            return subActive(pk, sb.showWhen) ? ynStr(s[sb.key]) : "Yes";
+          } });
+        });
       });
       CONFIG.tvColumns.forEach(function (tc) {
         cols.push({ h: tc.label + " shows", v: function (id, s) { var e = s.tv[tc.key]; return e ? dispStr(e) : "n/a"; }, tvKey: tc.key });
